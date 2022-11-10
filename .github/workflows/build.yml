@@ -311,10 +311,16 @@ jobs:
     if: (github.event_name != 'schedule') || (github.repository == 'mstorsjo/llvm-mingw')
     needs: [linux-cross]
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x86_64
+          - i686
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: windows-x86_64-toolchain
+          name: windows-${{matrix.arch}}-toolchain
       - name: Unpack toolchain
         run: |
           Expand-Archive llvm-mingw-*.zip -DestinationPath .
